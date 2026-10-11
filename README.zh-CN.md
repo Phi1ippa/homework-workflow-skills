@@ -125,6 +125,5 @@ skills/
 scripts/             安装脚本
 docs/usage.md        英文使用指南
 docs/usage.zh-CN.md  中文使用指南
-docs/testing.md      端到端测试指引（英文）
 README.zh-CN.md      本文件
 ```

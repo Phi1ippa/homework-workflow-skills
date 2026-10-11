@@ -132,6 +132,5 @@ scripts/             install scripts
 docs/
   usage.md           usage guide: scenarios and example prompts for each skill
   usage.zh-CN.md     usage guide in Chinese
-  testing.md         end-to-end testing guide
 README.zh-CN.md      README in Chinese
 ```
