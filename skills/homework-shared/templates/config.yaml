@@ -1,0 +1,12 @@
+# Homework workflow configuration
+
+# Default tier when none is specified: architecture | spec | skeleton
+default_tier: spec
+
+# Language for the body of assignment files, e.g. en, zh-CN. Leave empty to follow the user's language.
+# Conversation always uses the user's language.
+language:
+
+review:
+  # Whether reviews include a defense (Q&A) by default; the user can override it for a single review
+  defense: false

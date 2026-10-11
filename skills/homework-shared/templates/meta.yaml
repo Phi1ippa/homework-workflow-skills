@@ -1,0 +1,21 @@
+name: <assignment name, kebab-case>
+title: <one-line title>
+
+# Project info; leave empty for standalone assignments
+project:
+project_task_id:        # task id within the project, e.g. T2
+depends_on: []          # task ids this assignment depends on, e.g. [T1]
+
+tier: spec              # architecture | spec | skeleton
+status: in-progress     # one of: in-progress | changes-requested | passed | archived
+
+base_commit: <base commit SHA at assignment time>
+base_branch: <branch at assignment time>
+branch:                 # bound branch (optional); on this branch the assignment is located automatically
+
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+summary: <one-line status shown when listing assignments>
+
+stale: false            # staleness flag, set only by hw-plan when re-planning
+stale_reason:

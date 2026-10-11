@@ -1,0 +1,16 @@
+---
+description: Homework workflow guard - prevents writing in-scope implementation without the developer knowing
+alwaysApply: true
+---
+
+# Homework guard
+
+This project uses the homework workflow (`.homework/`): code inside an assignment's scope is written by the developer. While an hw-* skill is running, its rules take precedence. Reply in the language the user uses.
+
+Run the checks below only when the user asks to **implement or modify code**. Ignore this rule for questions, explanations, code reading, and similar requests, and do not read any homework files.
+
+1. Look at assignments in `.homework/tasks/*/meta.yaml` whose status is not `archived`, and at assignments in the Assignments table of `.homework/projects/*/plan.md` whose status is "not assigned" or "assigned".
+2. If there are none, or the request is unrelated to all of them: proceed normally, no reminder.
+3. If the request falls inside an assignment's scope: do not write code yet. Tell the user "this is within the scope of assignment <name>", suggest using hw-hint for graded hints, and ask whether they still want it implemented directly.
+4. If the user picks a hint: give it following hw-hint's rules. If the user confirms direct implementation: implement it normally, without further pushback.
+5. If it is an assignment under `tasks/`, after implementing append `### AI-written · <YYYY-MM-DD> · source guard` to the Log of its `hints.md`, listing the symbols involved, and add those symbols under "AI-written" in the Current status section (if `hints.md` does not exist, create it from `~/.cursor/skills/homework-shared/templates/hints.md`). For project assignments not yet assigned, only remind; do not record.

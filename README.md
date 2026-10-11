@@ -1,0 +1,131 @@
+# Homework Workflow Skills for Cursor
+
+A set of Cursor Agent Skills that lets you write the code yourself, with the AI as your teacher. It works like homework at school: the AI designs the assignment, answers questions when you are stuck, and grades your work, while you write the code.
+
+The goal is not to make the AI write code faster for you. It is to keep you in command of the code in your own repository while still getting real help from AI.
+
+See the [usage guide](docs/usage.md) for when to use each skill and example prompts.
+
+```
+                     +-----------+
+                     |  hw-plan  |  (optional) split a big requirement into assignments
+                     +-----+-----+
+                           v
+                     +-----------+
+                     | hw-assign |  design + acceptance criteria + progress checklist
+                     +-----+-----+
+                           |
+          +----------------+----------------+
+          v                v                v
+    +-----------+   +-------------+   (you write the code)
+    |  hw-hint  |   | hw-progress |
+    +-----------+   +-------------+
+     when stuck       mid-way check
+          |                |
+          +-------+--------+
+                  v
+            +-----------+   changes requested
+            | hw-review | ------------------> go fix it
+            +-----+-----+
+                  | passed
+                  v
+            +------------+
+            | hw-archive |  archive; merge back into the project plan
+            +------------+
+```
+
+## The six skills
+
+| Skill | What it does | How to trigger |
+|---|---|---|
+| `hw-plan` | Plans a project through conversation, splits it into dependency-ordered assignments, writes `plan.md`; also re-plans mid-way | "plan a project", "this is too big, help me split it" |
+| `hw-assign` | Reads your code and assigns one assignment at the chosen tier | "assign homework", "I want to implement X myself, design it for me" |
+| `hw-hint` | Graded hints: direction, then approach, then snippet; the level carries over across conversations | "I'm stuck", "give me a hint" |
+| `hw-progress` | Lists assignments; checks progress mid-way and warns about deviations | "where am I", "check-in" |
+| `hw-review` | Grades against the acceptance criteria, evaluates deviations, optional defense; never edits your code | "hand in", "I'm done" |
+| `hw-archive` | Archives a passed assignment | explicit `hw-archive` only |
+
+## Three scaffolding tiers
+
+| Tier | What you get | Good for |
+|---|---|---|
+| Architecture | Module breakdown, responsibilities, data flow, acceptance criteria | Familiar territory; you design the interfaces too |
+| Spec (default) | Architecture + interface signatures, data structures, key approach, edge cases | Most tasks |
+| Skeleton | Spec + stubs written into your files (signatures and TODOs only), pseudocode for hard parts | Unfamiliar domains or tech stacks |
+
+No tier ever contains runnable business logic.
+
+## Core rules
+
+- **The design is a suggestion, not a contract.** You may deviate; explain why when you hand in. Sound deviations are accepted and written back into the design.
+- **The defense is optional.** Set the default in `.homework/config.yaml`, or say "review and quiz me" when handing in. A weak answer is listed as an understanding gap and never fails the assignment on its own.
+- **Files are the only memory.** Every skill restores context from the assignment files and git, so you can pick up in a brand-new conversation.
+- **Guard rule.** If you ask the AI in a new conversation to implement something inside an assignment's scope, it reminds you first. If you confirm, it does it and records it as "AI-written".
+- **Replies follow your language.** The skills are written in English, but the AI replies in whatever language you write in.
+
+## Requirements
+
+- [Cursor](https://cursor.com) with Agent Skills support.
+- The target project must be a git repository; git is used to tell which code you wrote for an assignment.
+
+## Install
+
+```bash
+git clone https://github.com/Phi1ippa/homework-workflow-skills.git
+cd homework-workflow-skills
+```
+
+Windows:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/install.ps1
+```
+
+macOS / Linux:
+
+```bash
+bash scripts/install.sh
+```
+
+The script copies the 7 directories under `skills/` (the six skills plus the shared conventions in `homework-shared`) into `~/.cursor/skills/`. Directories with the same names are replaced; other skills are left alone. All six skills depend on `homework-shared`, so install them together rather than copying one skill on its own.
+
+To update, pull the latest version and run the install script again.
+
+## Uninstall
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/install.ps1 -Uninstall
+```
+
+```bash
+bash scripts/install.sh --uninstall
+```
+
+## Files created in your project
+
+```
+<your project>/
+  .homework/
+    config.yaml
+    projects/<project>/plan.md
+    tasks/<assignment>/
+      meta.yaml  assignment.md  hints.md  progress.md  reviews/
+    archive/YYYY-MM-DD-<assignment>/
+  .cursor/rules/homework-guard.mdc
+```
+
+`.homework/` and `homework-guard.mdc` are added to your project's `.git/info/exclude`, git's local-only ignore file. They never show up in `git status`, are never committed, and your `.gitignore` is not touched.
+
+At the skeleton tier, if you agree, a commit containing only the stubs is created (`hw(<assignment>): scaffold stubs`) as the assignment's starting point.
+
+## Repository layout
+
+```
+skills/
+  homework-shared/   shared conventions (conventions.md) and templates/
+  hw-*/SKILL.md      the six skills
+scripts/             install scripts
+docs/
+  usage.md           usage guide: scenarios and example prompts for each skill
+  testing.md         end-to-end testing guide
+```
